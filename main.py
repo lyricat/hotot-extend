@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#Here is one problem i cant figure out. Maybe someone else can do it?
 
 import wsgiref.handlers
 from google.appengine.ext import webapp
