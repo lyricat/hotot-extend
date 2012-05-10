@@ -1,5 +1,5 @@
 application: shorter
-version: 0.1
+version: 1
 api_version: 1
 runtime: python
 
@@ -7,5 +7,5 @@ handlers:
 - url: /
   script: main.py
   
-- url: /insert-tweet.html
-  script: insert-tweet.py
+- url: /create.json
+  script: create.py

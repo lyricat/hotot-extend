@@ -1,5 +1,4 @@
-Just a simple GAE site vor entering Tweets into a DB.
-Currently no URL is generated.
+Following api works now:
 
 ## API
 
