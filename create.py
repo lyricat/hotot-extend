@@ -14,7 +14,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
-def id_generator(size=6, chars=string.ascii_letters + string.digits):
+def id_generator(size=8, chars=string.ascii_letters + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
     
 def getUniqueTextID():
