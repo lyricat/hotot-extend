@@ -81,7 +81,7 @@ class APIHandler(webapp.RequestHandler):
 	sliced_text = tweettext[0:maxlen]
 	
 	#append the url
-	sliced_text = sliced_text +  + url
+	sliced_text = sliced_text + seperator + url
 	
 	#create an array to convert it to json and give it back to the user
 	respond = {

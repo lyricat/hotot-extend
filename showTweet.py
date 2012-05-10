@@ -29,6 +29,13 @@ class TweetHandler(webapp.RequestHandler):
                         }
                         self.response.out.write(template.render('showTweet.html', values))
                     else:
+                        tweet = {
+                            'full_text': "The text you are looking for does not exist!"
+                        }
+                        values = {
+                            'tweet': tweet
+                        }
+                        self.response.out.write(template.render('showTweet.html', values))
                         break
                     
 
