@@ -62,7 +62,7 @@ class APIHandler(webapp.RequestHandler):
 	base_url = urlparse.urlparse(self.request.url)
 	    
 	#build our URL with the text_id behind
-	url = 'http://' + base_url.hostname + '/' + text_id
+	url = 'http://hotot.in/' + text_id
 	
 	#this is the url length in characters
 	url_len = len(url)
