@@ -24,10 +24,10 @@ POST URL_BASE/create.json
 
 **Note**
 	
-	$id: the unique id of the piece of text
-	$url: url to get full text
-	$full_text: full text
-	$text: the striped text. The length of it shouldn't longer than 140 - len($url)
+ - $id: the unique id of the piece of text
+ - $url: url to get full text
+ -$full_text: full text
+ -$text: the striped text. The length of it shouldn't longer than 140 - len($url)
 
 ### get full tweet
 
