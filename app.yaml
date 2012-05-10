@@ -1,8 +1,11 @@
 application: hotot-extend
-version: 1
+version: 3
 api_version: 1
 runtime: python
 
 handlers:
 - url: /create.json
   script: create.py
+  
+- url: /.*
+  script: showTweet.py

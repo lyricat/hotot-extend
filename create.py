@@ -2,10 +2,12 @@
 
 #Default imports
 import wsgiref.handlers
-import json
 import string
 import random
 import urlparse
+
+#django imports
+from django.utils import simplejson
 
 #Google App Engine imports
 from google.appengine.ext import webapp
@@ -38,7 +40,15 @@ class Tweets(db.Model):
 
 class APIHandler(webapp.RequestHandler):
     def get(self):
-        self.response.out.write(json.dumps(['error', 'error_direct_connection']))
+	error = {
+	    "result": "error",
+	    "error": "error_no_direct_connection"
+	}
+	
+	#create json_encoder
+	json_encoder = simplejson.encoder.JSONEncoder()
+	
+        self.response.out.write(json_encoder.encode(error))
         
     def post(self):
 	#maximum characters for twitter
@@ -50,14 +60,9 @@ class APIHandler(webapp.RequestHandler):
 	
 	#base_url contains everything about the host url
 	base_url = urlparse.urlparse(self.request.url)
-	#check if the port of the host isn't 80. If so we have to add it after the hostname
-	if(base_url.port != 80):
-	    port = ':{0}'.format(base_url.port)
-	else:
-	    port = ''
 	    
 	#build our URL with the text_id behind
-	url = ' (...) http://' + base_url.hostname + port + '/' + text_id
+	url = 'http://' + base_url.hostname + '/' + text_id
 	
 	#this is the url length in characters
 	url_len = len(url)
@@ -69,7 +74,7 @@ class APIHandler(webapp.RequestHandler):
 	sliced_text = tweettext[0:maxlen]
 	
 	#append the url
-	sliced_text = sliced_text + url
+	sliced_text = sliced_text + ' (...) ' + url
 	
 	#create an array to convert it to json and give it back to the user
 	respond = {
@@ -79,8 +84,11 @@ class APIHandler(webapp.RequestHandler):
 	    'text': sliced_text
 	}
 	
+	#create json_encoder
+	json_encoder = simplejson.encoder.JSONEncoder()
+	
 	#print out the json string to the user
-        self.response.out.write(json.dumps(respond))
+        self.response.out.write(json_encoder.encode(respond))
     
 def main():
     app = webapp.WSGIApplication([
