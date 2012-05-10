@@ -64,17 +64,24 @@ class APIHandler(webapp.RequestHandler):
 	#build our URL with the text_id behind
 	url = 'http://hotot.in/' + text_id
 	
+	#the seperator
+	seperator = ' (...) '
+	
 	#this is the url length in characters
 	url_len = len(url)
 	
+	#this is the length of the seperator
+	sep_len = len(seperator)
+	
 	#substrate the url_len from the maxlen object to get the maximum text length
 	maxlen = maxlen - url_len
+	maxlen = maxlen - sep_len
 	
 	#this is the new twitter string reduced to 140 characters with the url
 	sliced_text = tweettext[0:maxlen]
 	
 	#append the url
-	sliced_text = sliced_text + ' (...) ' + url
+	sliced_text = sliced_text +  + url
 	
 	#create an array to convert it to json and give it back to the user
 	respond = {
