@@ -38,9 +38,9 @@ class APIHandler(webapp.RequestHandler):
         avatar = self.request.get("avatar")
         # check form values
         # @TODO erro handle
-        if not (text and avatar and name and orig_link):
+        if not (text and avatar and name):
             return
-        if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024 or len(orig_link) > 1024:
+        if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024:
             return
         key = insertDB(text, name, avatar)
 
