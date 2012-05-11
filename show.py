@@ -30,7 +30,7 @@ class TweetHandler(webapp.RequestHandler):
                 if result:
                     r = template.render('show.html', 
                         {'tweet': result})
-                    self.response.out.write(str(r))
+                    self.response.out.write(str(r.encode('utf-8')))
                 else:
                     # @TODO need an error handler
                     tweet = {
