@@ -27,7 +27,7 @@ class APIHandler(webapp.RequestHandler):
     SEPERATOR = ' (...) '
     SEPERATOR_LEN = 7
     def get(self):
-        self.response.out.write(json.dumps(ERROR))
+        self.response.out.write(json.dumps(self.ERROR))
 
     def post(self):
         #maximum characters for twitter
@@ -45,9 +45,9 @@ class APIHandler(webapp.RequestHandler):
             return
         key = insertDB(text, name, avatar, orig_link)
 
-        url = 'http://hotot.in/' + str(APIHandler.ID_OFFSET + key.id())
-        maxlen -= len(url) + APIHandler.SEPERATOR_LEN
-        sliced_text = text[0:maxlen] + APIHandler.SEPERATOR + url
+        url = 'http://hotot.in/' + str(self.ID_OFFSET + key.id())
+        maxlen -= len(url) + self.SEPERATOR_LEN
+        sliced_text = text[0:maxlen] + self.SEPERATOR + url
 
         #create an array to convert it to json and give it back to the user
         respond = {

@@ -19,5 +19,5 @@ handlers:
   script: create.py
   
 - url: /.*
-  script: showTweet.py
+  script: show.py
   
