@@ -11,10 +11,10 @@
 		</div>
 		<div id="content">
 			<div class="avatar">
-				<img src="{{tweet.avatar}}#" alt="" onerror="javascript:this.src='/image/default_avatar.png';return false;" />
+				<img src="{{tweet.avatar|escape}}#" alt="" onerror="javascript:this.src='/image/default_avatar.png';return false;" />
 			</div>
 			<div class="bubble">
-				<div class="screen_name">{{tweet.name}}:</div>
+				<div class="screen_name">{{tweet.name|escape}}:</div>
 				<div class="text">
 					{{tweet.full_text|escape}}
 				</div>
