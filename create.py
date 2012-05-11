@@ -12,6 +12,8 @@ import model
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
+from google.appengine.api import memcache
+
 
 def insertDB(tmp_text, tmp_name, tmp_avatar):
     tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text)
@@ -50,11 +52,11 @@ class APIHandler(webapp.RequestHandler):
 
         #create an array to convert it to json and give it back to the user
         respond = {
-                'id': key.id(),
-                'url': url,
-                'full_text': text,
-                'text': sliced_text
-                }
+            'id': key.id(),
+            'url': url,
+            'full_text': text,
+            'text': sliced_text
+        }
 
         #print out the json string to the user
         self.response.out.write(json.dumps(respond))
