@@ -1,0 +1,3 @@
+# Deny all other spiders
+User-agent: *
+Disallow: / 
