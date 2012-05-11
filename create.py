@@ -4,6 +4,7 @@
 import wsgiref.handlers
 import string
 import random
+import json
 import urlparse
 
 #Google App Engine imports
@@ -15,18 +16,23 @@ def id_generator(size=8, chars=string.ascii_letters + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
 def getUniqueTextID():
-    text_id = id_generator();
-    result = db.GqlQuery("SELECT * FROM Tweets WHERE text_id = :textid", text_id)
+    whilecount = 0
+    text_id = id_generator()
+    result = db.GqlQuery("SELECT * FROM Tweets WHERE text_id = :1", text_id)
     while True:
-        if hasattr(result, 'text_id'):
+        whilecount = whilecount + 1
+        if hasattr(result, "text_id"):
             text_id = id_generator()
-    else:
-        return text_id
+        else:
+            return text_id
+        
+        if whilecount == 10:
+            return error
+            break
 
-def insertDB(tmp_text):
-    if tmp_text != None:
-        tmp_id = getUniqueTextID()
-    tweet = Tweets(text_id=tmp_id,full_text=tmp_text)
+def insertDB(tmp_text,tmp_name,tmp_avatar):
+    tmp_id = getUniqueTextID()
+    tweet = Tweets(text_id=tmp_id,name=tmp_name,avatar=tmp_avatar,full_text=tmp_text)
     tweet.put()
     return tmp_id
 
@@ -52,7 +58,7 @@ class APIHandler(webapp.RequestHandler):
         text = self.request.get("text")
         name = self.request.get("name")
         avatar = self.request.get("avatar")
-        text_id = insertDB(text)
+        text_id = insertDB(text, name, avatar)
         #build our URL with the text_id behind
         url = 'http://hotot.in/' + text_id
         #the seperator
@@ -60,12 +66,12 @@ class APIHandler(webapp.RequestHandler):
         #substrate the url_len from the maxlen object to get the maximum text length
         maxlen -= len(url) + len(seperator)
         #this is the new twitter string reduced to 140 characters with the url
-        sliced_text = tweettext[0:maxlen] + seperator + url
+        sliced_text = text[0:maxlen] + seperator + url
         #create an array to convert it to json and give it back to the user
         respond = {
                 'id': text_id,
                 'url': url,
-                'full_text': tweettext,
+                'full_text': text,
                 'text': sliced_text
                 }
 
