@@ -28,7 +28,7 @@ class TweetHandler(webapp.RequestHandler):
                     self.response.out.write('error')
                     return
                 if result:
-                    r = template.render('showTweet.html', 
+                    r = template.render('show.html', 
                         {'tweet': result})
                     self.response.out.write(str(r))
                 else:
@@ -40,7 +40,7 @@ class TweetHandler(webapp.RequestHandler):
                         'tweet': tweet
                     }
                     self.response.out.write(
-                        template.render('showTweet.html', values)
+                        template.render('show.html', values)
                     )
                     
 def main():
