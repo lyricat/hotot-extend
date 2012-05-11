@@ -28,6 +28,7 @@ class TweetHandler(webapp.RequestHandler):
                     self.response.out.write('error')
                     return
                 if result:
+                    result.id = id
                     r = template.render('show.html', 
                         {'tweet': result})
                     self.response.out.write(str(r.encode('utf-8')))

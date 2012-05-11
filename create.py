@@ -13,8 +13,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
-def insertDB(tmp_text, tmp_name, tmp_avatar, orig_link):
-    tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text, orig_link = orig_link)
+def insertDB(tmp_text, tmp_name, tmp_avatar):
+    tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text)
     return tweet.put()
 
 
@@ -27,7 +27,7 @@ class APIHandler(webapp.RequestHandler):
     SEPERATOR = ' (...) '
     SEPERATOR_LEN = 7
     def get(self):
-        self.response.out.write(json.dumps(ERROR))
+        self.response.out.write(json.dumps(self.ERROR))
 
     def post(self):
         #maximum characters for twitter
@@ -36,18 +36,17 @@ class APIHandler(webapp.RequestHandler):
         text = self.request.get("text")
         name = self.request.get("name")
         avatar = self.request.get("avatar")
-        orig_link = self.request.get("orig_link")
         # check form values
         # @TODO erro handle
-        if not (text and avatar and name and orig_link):
+        if not (text and avatar and name):
             return
-        if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024 or len(orig_link) > 1024:
+        if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024:
             return
-        key = insertDB(text, name, avatar, orig_link)
+        key = insertDB(text, name, avatar)
 
-        url = 'http://hotot.in/' + str(APIHandler.ID_OFFSET + key.id())
-        maxlen -= len(url) + APIHandler.SEPERATOR_LEN
-        sliced_text = text[0:maxlen] + APIHandler.SEPERATOR + url
+        url = 'http://hotot.in/' + str(self.ID_OFFSET + key.id())
+        maxlen -= len(url) + self.SEPERATOR_LEN
+        sliced_text = text[0:maxlen] + self.SEPERATOR + url
 
         #create an array to convert it to json and give it back to the user
         respond = {
