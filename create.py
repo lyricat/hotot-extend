@@ -14,7 +14,7 @@ from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
 def insertDB(tmp_text, tmp_name, tmp_avatar, orig_link):
-    tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text, orig_link = orig_link)
+    tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text)
     return tweet.put()
 
 
@@ -36,14 +36,13 @@ class APIHandler(webapp.RequestHandler):
         text = self.request.get("text")
         name = self.request.get("name")
         avatar = self.request.get("avatar")
-        orig_link = self.request.get("orig_link")
         # check form values
         # @TODO erro handle
         if not (text and avatar and name and orig_link):
             return
         if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024 or len(orig_link) > 1024:
             return
-        key = insertDB(text, name, avatar, orig_link)
+        key = insertDB(text, name, avatar)
 
         url = 'http://hotot.in/' + str(self.ID_OFFSET + key.id())
         maxlen -= len(url) + self.SEPERATOR_LEN
