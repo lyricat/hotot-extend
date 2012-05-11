@@ -3,13 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Hotot.in</title>
+	<link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-	<div class="avatar"></div>
-	<div class="screen_name"></div>
-	<div class="bubble">
-		<div class="text">
-			{{tweet.full_text|escape}}
+	<div id="container">
+		<div id="header">
+		</div>
+		<div id="content">
+			<div class="avatar">
+				<img src="{{tweet.avatar}}#" alt="" onerror="javascript:this.src='/image/default_avatar.png';return false;" />
+			</div>
+			<div class="bubble">
+				<div class="screen_name">{{tweet.name}}:</div>
+				<div class="text">
+					{{tweet.full_text|escape}}
+				</div>
+			</div>
+			<div class="meta">
+				<a href="{{tweet.orig_link}}">Original</a>
+				<a href="http://hotot.in/{{tweet.id}}">Permlink</a>
+			</div>
 		</div>
 	</div>
 </body>

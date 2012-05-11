@@ -6,70 +6,52 @@ import string
 import random
 import json
 import urlparse
+import model
 
 #Google App Engine imports
 from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
-def id_generator(size=8, chars=string.ascii_letters + string.digits):
-    return ''.join(random.choice(chars) for x in range(size))
+def insertDB(tmp_text, tmp_name, tmp_avatar, orig_link):
+    tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text, orig_link = orig_link)
+    return tweet.put()
 
-def getUniqueTextID():
-    whilecount = 0
-    text_id = id_generator()
-    result = db.GqlQuery("SELECT * FROM Tweets WHERE text_id = :1", text_id)
-    while True:
-        whilecount = whilecount + 1
-        if hasattr(result, "text_id"):
-            text_id = id_generator()
-        else:
-            return text_id
-        
-        if whilecount == 10:
-            return error
-            break
-
-def insertDB(tmp_text,tmp_name,tmp_avatar):
-    tmp_id = getUniqueTextID()
-    tweet = Tweets(text_id=tmp_id,name=tmp_name,avatar=tmp_avatar,full_text=tmp_text)
-    tweet.put()
-    return tmp_id
-
-class Tweets(db.Model):
-    text_id = db.StringProperty(required=True)
-    name = db.StringProperty(required=True)
-    avatar = db.StringProperty(required=True)
-    full_text = db.StringProperty(multiline=True,required=True)
-    date = db.DateTimeProperty(auto_now_add=True)
 
 class APIHandler(webapp.RequestHandler):
+    ERROR = {
+        "result": "error",
+        "error": "error_no_direct_connection"
+    }
+    ID_OFFSET = 100
+    SEPERATOR = ' (...) '
+    SEPERATOR_LEN = 7
     def get(self):
-        error = {
-                "result": "error",
-                "error": "error_no_direct_connection"
-                }
-        self.response.out.write(json.dumps(error))
+        self.response.out.write(json.dumps(ERROR))
 
     def post(self):
         #maximum characters for twitter
         maxlen = 140
-        #insertDB will insert the text and the text_id into the database and return the text_id. A unique one
+
         text = self.request.get("text")
         name = self.request.get("name")
         avatar = self.request.get("avatar")
-        text_id = insertDB(text, name, avatar)
-        #build our URL with the text_id behind
-        url = 'http://hotot.in/' + text_id
-        #the seperator
-        seperator = ' (...) '
-        #substrate the url_len from the maxlen object to get the maximum text length
-        maxlen -= len(url) + len(seperator)
-        #this is the new twitter string reduced to 140 characters with the url
-        sliced_text = text[0:maxlen] + seperator + url
+        orig_link = self.request.get("orig_link")
+        # check form values
+        # @TODO erro handle
+        if not (text and avatar and name and orig_link):
+            return
+        if len(text) > 10240 or len(name) > 32 or len(avatar) > 1024 or len(orig_link) > 1024:
+            return
+        key = insertDB(text, name, avatar, orig_link)
+
+        url = 'http://hotot.in/' + str(APIHandler.ID_OFFSET + key.id())
+        maxlen -= len(url) + APIHandler.SEPERATOR_LEN
+        sliced_text = text[0:maxlen] + APIHandler.SEPERATOR + url
+
         #create an array to convert it to json and give it back to the user
         respond = {
-                'id': text_id,
+                'id': key.id(),
                 'url': url,
                 'full_text': text,
                 'text': sliced_text
