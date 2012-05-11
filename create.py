@@ -13,7 +13,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
 
-def insertDB(tmp_text, tmp_name, tmp_avatar, orig_link):
+def insertDB(tmp_text, tmp_name, tmp_avatar):
     tweet = model.Tweets(name=tmp_name, avatar=tmp_avatar,full_text=tmp_text)
     return tweet.put()
 
