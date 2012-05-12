@@ -1,5 +1,3 @@
-Following api works now:
-
 ## API
 
 ver 0.1
