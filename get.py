@@ -16,10 +16,10 @@ class TweetHandler(webapp.RequestHandler):
     def get(self):
         base_url = urlparse.urlparse(self.request.url)
         if base_url.path:
-            id_str = base_url.path[7:]
-            id_len = len(id_str) - 5
-            id_str = id_str[0:id_len]
-            r = memcache.get(id_str)
+            id_json = base_url.path[7:]
+            id_len = len(id_json) - 5
+            id_str = id_json[0:id_len]
+            r = memcache.get(id_json)
             if r is None:
                 try:
                     id = int(id_str)
@@ -42,7 +42,7 @@ class TweetHandler(webapp.RequestHandler):
                             'full_text': result.full_text
                         }
                         r = json.dumps(response)
-                        #memcache.set(id_str, r)
+                        memcache.set(id_json, r)
                         self.response.out.write(r)
                     else:
                         # @TODO need an error handler
