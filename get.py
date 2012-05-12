@@ -17,8 +17,12 @@ class TweetHandler(webapp.RequestHandler):
         base_url = urlparse.urlparse(self.request.url)
         if base_url.path:
             id_json = base_url.path[7:]
-            id_len = len(id_json) - 5
-            id_str = id_json[0:id_len]
+            if id_json.endswith('.json'):
+                id_len = len(id_json) - 5
+                id_str = id_json[0:id_len]
+            else:
+                id_str = id_json
+                
             r = memcache.get(id_json)
             if r is None:
                 try:
