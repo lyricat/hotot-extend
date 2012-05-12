@@ -41,7 +41,6 @@ GET URL_BASE/tweets/:id.json
 	{
 		id: $id,
 		url: URL_BASE/$id,
-		full_text: $full_text,
-		text: $text,
+		full_text: $full_text
 	}
 
