@@ -17,6 +17,9 @@ handlers:
 
 - url: /create.json
   script: create.py
+
+- url: /tweet/.*
+  script: get.py
   
 - url: /.*
   script: show.py
