@@ -1,6 +1,6 @@
 ## API
 
-ver 0.1
+ver 0.2
 
 ### create new tweet
 
@@ -9,6 +9,8 @@ POST URL_BASE/create.json
 **Parameters**
 
  - Text: Text of this tweet
+ - Image: The Userimage of this Tweet
+ - Name: The Username of this Tweet
 
 **Response**
 
